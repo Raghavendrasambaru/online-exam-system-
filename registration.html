@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Register</title>
+
+<style>
+body{
+font-family:-apple-system;
+background:url("https://images.unsplash.com/photo-1501504905252-473c47e087f8");
+background-size:cover;
+background-position:center;
+background-attachment:fixed;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+background:rgba(255,255,255,0.2);
+backdrop-filter:blur(25px);
+padding:40px;
+border-radius:20px;
+width:350px;
+text-align:center;
+}
+
+input,button{
+width:100%;
+padding:12px;
+margin:10px 0;
+border-radius:10px;
+border:none;
+font-size:16px;
+}
+
+button{
+background:#FF3B30;
+color:white;
+cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>Student Registration</h2>
+
+<input id="name" placeholder="Enter Name">
+<input id="password" type="password" placeholder="Enter Password">
+
+<button onclick="register()">Register</button>
+
+</div>
+
+<script>
+
+function register(){
+
+let name=document.getElementById("name").value.trim();
+let password=document.getElementById("password").value.trim();
+
+// ✅ Check empty
+if(!name || !password){
+alert("Please fill all fields");
+return;
+}
+
+fetch("http://13.60.14.122:5000/register",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({name,password})
+})
+.then(res=>{
+
+// ✅ If success
+if(res.ok){
+return res.json();
+}
+
+// ❌ If user already exists
+throw new Error("User exists");
+
+})
+.then(data=>{
+
+alert(data.message);
+
+// ✅ REDIRECT TO LOGIN
+window.location.href="login.html";
+
+})
+.catch(err=>{
+
+alert("User already exists or error");
+
+// ✅ OPTIONAL REDIRECT EVEN IF EXISTS
+window.location.href="login.html";
+
+});
+
+}
+
+</script>
+
+</body>
+</html>

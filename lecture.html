@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Lecturer Login</title>
+
+<style>
+body{
+font-family:-apple-system;
+background:url("https://images.unsplash.com/photo-1501504905252-473c47e087f8");
+background-size:cover;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+background:rgba(255,255,255,0.2);
+backdrop-filter:blur(25px);
+padding:40px;
+border-radius:20px;
+text-align:center;
+width:300px;
+}
+
+input,button{
+width:100%;
+padding:12px;
+margin:10px 0;
+border-radius:10px;
+border:none;
+font-size:16px;
+}
+
+button{
+background:#FF3B30;
+color:white;
+cursor:pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Lecturer Login</h2>
+
+<input id="lid" placeholder="Enter 4 Digit ID">
+
+<button onclick="login()">Login</button>
+
+</div>
+
+<script>
+
+function login(){
+
+const id=document.getElementById("lid").value;
+
+if(id==="1234"){
+window.location.href="dashboard.html";
+}else{
+alert("Invalid Lecturer ID");
+}
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Result</title>
+
+<style>
+body{
+font-family:-apple-system;
+background:url("https://images.unsplash.com/photo-1523580846011-d3a5bc25702b");
+background-size:cover;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+}
+
+.container{
+background:rgba(255,255,255,0.2);
+backdrop-filter:blur(25px);
+padding:40px;
+border-radius:20px;
+width:800px;
+color:white;
+}
+
+h2{text-align:center;}
+
+.question{
+margin-top:15px;
+background:rgba(255,255,255,0.85);
+padding:15px;
+border-radius:10px;
+color:black;
+}
+
+.correct-option{color:green;font-weight:bold;}
+.wrong-option{color:red;font-weight:bold;}
+
+button{
+width:100%;
+padding:12px;
+margin-top:20px;
+border:none;
+border-radius:10px;
+background:#FF3B30;
+color:white;
+cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2 id="score"></h2>
+<div id="review"></div>
+
+<button onclick="goHome()">Go Home</button>
+
+</div>
+
+<script>
+
+let score=localStorage.getItem("score");
+let total=localStorage.getItem("total");
+let reviewRaw=localStorage.getItem("review");
+
+if(!score || !reviewRaw){
+document.querySelector(".container").innerHTML="<h2>No exam data found</h2>";
+throw new Error("No data");
+}
+
+let reviewData=JSON.parse(reviewRaw);
+
+document.getElementById("score").innerText="Your Score: "+score+"/"+total;
+
+let html="";
+
+reviewData.forEach((q,i)=>{
+
+html+=`<div class="question">`
+html+=`<p>${i+1}) ${q.q}</p>`
+
+q.options.forEach(opt=>{
+if(opt===q.answer){
+html+=`<p class="correct-option">✔ ${opt}</p>`
+}
+else if(opt===q.user){
+html+=`<p class="wrong-option">❌ ${opt}</p>`
+}
+else{
+html+=`<p>${opt}</p>`
+}
+})
+
+html+="</div>"
+})
+
+document.getElementById("review").innerHTML=html;
+
+function goHome(){
+window.location.href="index.html";
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Online Examination System</title>
+
+<style>
+body{
+font-family:-apple-system;
+background:url("https://images.unsplash.com/photo-1501504905252-473c47e087f8");
+background-size:cover;
+background-position:center;
+background-attachment:fixed;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+background:rgba(255,255,255,0.2);
+backdrop-filter:blur(25px);
+padding:60px;
+border-radius:20px;
+text-align:center;
+position:relative;
+}
+
+/* 🔥 Small register button (top-right) */
+.register-btn{
+position:absolute;
+top:15px;
+right:15px;
+padding:8px 16px;
+border:none;
+border-radius:10px;
+background:#FF3B30;
+color:white;
+font-size:14px;
+cursor:pointer;
+}
+
+button.main-btn{
+padding:14px 28px;
+border:none;
+border-radius:12px;
+background:#FF3B30;
+color:white;
+font-size:18px;
+cursor:pointer;
+margin:10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- 🔴 SMALL REGISTER BUTTON -->
+<button class="register-btn" onclick="registerUser()">Register</button>
+
+<h1>Online Examination Portal</h1>
+
+<button class="main-btn" onclick="student()">Student</button><br>
+<button class="main-btn" onclick="lecturer()">Lecturer</button>
+
+</div>
+
+<script>
+
+// 🔹 Student button
+function student(){
+window.location.href="login.html";
+}
+
+// 🔹 Lecturer button
+function lecturer(){
+window.location.href="lecture.html";
+}
+
+// 🔹 Register button logic
+function registerUser(){
+
+// check if user already exists in browser
+let name = localStorage.getItem("name");
+
+// if already logged before → go to login
+if(name){
+window.location.href="login.html";
+}else{
+// new user → go to register
+window.location.href="registration.html";
+}
+
+}
+
+</script>
+
+</body>
+</html>

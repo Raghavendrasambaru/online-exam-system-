@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Exam</title>
+
+<style>
+body{
+font-family:-apple-system;
+background:url("https://images.unsplash.com/photo-1523580846011-d3a5bc25702b");
+background-size:cover;
+background-position:center;
+background-attachment:fixed;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+}
+
+.container{
+background:rgba(255,255,255,0.2);
+backdrop-filter:blur(25px);
+padding:40px;
+border-radius:20px;
+width:800px;
+color:white;
+}
+
+.timer{
+text-align:right;
+font-size:18px;
+font-weight:bold;
+}
+
+.question{
+background:white;
+color:black;
+padding:15px;
+margin:10px 0;
+border-radius:10px;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+background:#FF3B30;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+.correct{color:green;font-weight:bold;}
+.wrong{color:red;font-weight:bold;}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Online Examination</h2>
+
+<div class="timer">Time Left: <span id="time">600</span> sec</div>
+
+<select id="domain">
+<option value="">Select Domain</option>
+<option value="AI">AI</option>
+<option value="Cloud">Cloud</option>
+<option value="DS">Data Science</option>
+<option value="Cyber">Cyber Security</option>
+</select>
+
+<button onclick="startExam()">Start Exam</button>
+
+<form id="form"></form>
+
+<button id="submitBtn" onclick="submitExam()" style="display:none">Submit</button>
+
+<div id="result"></div>
+
+</div>
+
+<script>
+
+// TIMER
+let timeLeft=600;
+let timer;
+
+// QUESTION BANK (10 each)
+const qb={
+
+AI:[
+{q:"AI stands for?",o:["Artificial Intelligence","Advanced Internet","Auto Index","None"],a:"Artificial Intelligence"},
+{q:"ML belongs to?",o:["AI","DB","Net","HW"],a:"AI"},
+{q:"AI language?",o:["Python","HTML","CSS","SQL"],a:"Python"},
+{q:"NLP is?",o:["Language","Hardware","DB","Network"],a:"Language"},
+{q:"Self driving uses?",o:["Vision","DB","Router","Switch"],a:"Vision"},
+{q:"AI brain?",o:["Neural Network","CPU","RAM","ROM"],a:"Neural Network"},
+{q:"Chatbot?",o:["AI","DB","HW","Net"],a:"AI"},
+{q:"Deep learning?",o:["NN","DB","HW","Net"],a:"NN"},
+{q:"Sensors used in?",o:["AI","DB","HW","Net"],a:"AI"},
+{q:"Face recognition?",o:["Vision","DB","HW","Net"],a:"Vision"}
+],
+
+Cloud:[
+{q:"AWS stands?",o:["Amazon Web Services","App Web","Auto Web","None"],a:"Amazon Web Services"},
+{q:"Storage?",o:["S3","EC2","IAM","Lambda"],a:"S3"},
+{q:"EC2?",o:["Server","DB","Net","None"],a:"Server"},
+{q:"Azure?",o:["Cloud","DB","HW","Net"],a:"Cloud"},
+{q:"SaaS?",o:["Google Docs","EC2","Router","Switch"],a:"Google Docs"},
+{q:"Model?",o:["Public","Router","Switch","HW"],a:"Public"},
+{q:"DB?",o:["RDS","IAM","S3","EC2"],a:"RDS"},
+{q:"Cloud gives?",o:["Scalability","HW","Net","None"],a:"Scalability"},
+{q:"Cloud reduces?",o:["Cost","Speed","HW","Net"],a:"Cost"},
+{q:"Google storage?",o:["Cloud Storage","S3","EC2","EBS"],a:"Cloud Storage"}
+],
+
+DS:[
+{q:"DS stands?",o:["Data Science","DB","HW","Net"],a:"Data Science"},
+{q:"Library?",o:["Pandas","React","Angular","Vue"],a:"Pandas"},
+{q:"Graph?",o:["Matplotlib","HTML","CSS","JS"],a:"Matplotlib"},
+{q:"Query?",o:["SQL","Python","Java","C"],a:"SQL"},
+{q:"Big data?",o:["Hadoop","CPU","RAM","ROM"],a:"Hadoop"},
+{q:"Tool?",o:["Tableau","Router","Switch","HW"],a:"Tableau"},
+{q:"ML lib?",o:["Scikit","React","Angular","Vue"],a:"Scikit"},
+{q:"Rows?",o:["Records","Cols","Keys","Index"],a:"Records"},
+{q:"Cleaning?",o:["Errors","HW","Net","None"],a:"Errors"},
+{q:"Analysis?",o:["Decision","HW","Net","None"],a:"Decision"}
+],
+
+Cyber:[
+{q:"CS stands?",o:["Cyber Security","Cloud","Control","None"],a:"Cyber Security"},
+{q:"Unauthorized?",o:["Hacking","Coding","Testing","None"],a:"Hacking"},
+{q:"Firewall?",o:["Network","CPU","RAM","ROM"],a:"Network"},
+{q:"Virus?",o:["Malware","HW","Net","None"],a:"Malware"},
+{q:"Secure?",o:["HTTPS","FTP","SMTP","POP"],a:"HTTPS"},
+{q:"Verify?",o:["Auth","Routing","HW","Net"],a:"Auth"},
+{q:"Protection?",o:["Encryption","Debug","Test","Code"],a:"Encryption"},
+{q:"Phishing?",o:["Credentials","HW","Net","None"],a:"Credentials"},
+{q:"Antivirus?",o:["Malware","HW","Net","None"],a:"Malware"},
+{q:"2FA?",o:["Security","HW","Net","None"],a:"Security"}
+]
+
+};
+
+let current=[];
+
+// START EXAM
+function startExam(){
+
+let d=document.getElementById("domain").value;
+if(!d){alert("Select domain");return;}
+
+current=qb[d];
+
+form.innerHTML="";
+
+current.forEach((q,i)=>{
+form.innerHTML+=`
+<div class="question">
+<p>${i+1}. ${q.q}</p>
+${q.o.map(opt=>`
+<label>
+<input type="radio" name="q${i}" value="${opt}">${opt}
+</label>`).join("")}
+</div>`;
+});
+
+submitBtn.style.display="block";
+
+// START TIMER
+timer=setInterval(()=>{
+timeLeft--;
+time.innerText=timeLeft;
+if(timeLeft<=0){
+alert("Time up!");
+submitExam();
+}
+},1000);
+
+}
+
+// SUBMIT
+function submitExam(){
+
+clearInterval(timer);
+
+let score=0;
+let review="<h3>Answer Review</h3>";
+
+current.forEach((q,i)=>{
+
+let sel=document.querySelector(`input[name=q${i}]:checked`);
+let user=sel?sel.value:"";
+
+review+=`<div class="question"><p>${i+1}. ${q.q}</p>`;
+
+q.o.forEach(opt=>{
+if(opt===q.a){
+review+=`<p class="correct">✔ ${opt}</p>`;
+}
+else if(opt===user){
+review+=`<p class="wrong">❌ ${opt}</p>`;
+}
+else{
+review+=`<p>${opt}</p>`;
+}
+});
+
+if(user===q.a) score++;
+
+review+="</div>";
+
+});
+
+// SEND TO BACKEND
+fetch("http://13.60.14.122:5000/submit_exam",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+name:localStorage.getItem("name"),
+course:localStorage.getItem("course"),
+year:localStorage.getItem("year"),
+score:score
+})
+});
+
+result.innerHTML=`<h2>Your Score: ${score}/10</h2>`+review;
+
+}
+
+// SECURITY
+document.addEventListener("visibilitychange",()=>{
+if(document.hidden){
+alert("Tab switch detected");
+submitExam();
+}
+});
+
+document.addEventListener("contextmenu",e=>e.preventDefault());
+
+document.addEventListener("keydown",e=>{
+if(e.keyCode==123 || (e.ctrlKey && ["c","v","u"].includes(e.key))){
+e.preventDefault();
+alert("Restricted action");
+submitExam();
+}
+});
+
+</script>
+
+</body>
+</html>

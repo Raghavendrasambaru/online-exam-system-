@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login</title>
+
+<style>
+body{
+font-family:-apple-system;
+background:url("https://images.unsplash.com/photo-1523580846011-d3a5bc25702b");
+background-size:cover;
+background-position:center;
+background-attachment:fixed;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+background:rgba(255,255,255,0.2);
+backdrop-filter:blur(25px);
+padding:40px;
+border-radius:20px;
+width:350px;
+text-align:center;
+}
+
+input,select,button{
+width:100%;
+padding:12px;
+margin:12px 0; /* 👈 improved spacing */
+border-radius:10px;
+border:none;
+font-size:16px;
+}
+
+button{
+background:#FF3B30;
+color:white;
+cursor:pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+<h2>Login</h2>
+
+<!-- 🔹 FIXED INPUTS -->
+<input id="name" placeholder="Enter Name">
+<input id="password" type="password" placeholder="Enter Password">
+
+<select id="course" onchange="updateYears()">
+<option value="">Select Course</option>
+<option>BTech</option>
+<option>MCA</option>
+<option>MBA</option>
+</select>
+
+<select id="year">
+<option value="">Select Year</option>
+</select>
+
+<button onclick="login()">Start Exam</button>
+
+</div>
+
+<script>
+
+// 🔹 Dynamic Year Dropdown
+function updateYears(){
+let c=document.getElementById("course").value;
+let year=document.getElementById("year");
+
+year.innerHTML="<option value=''>Select Year</option>";
+
+let years = (c==="BTech")
+? ["1st Year","2nd Year","3rd Year","4th Year"]
+: ["1st Year","2nd Year"];
+
+years.forEach(y=>{
+let option=document.createElement("option");
+option.text=y;
+year.add(option);
+});
+}
+
+// 🔹 LOGIN FUNCTION (FIXED)
+function login(){
+
+const name=document.getElementById("name").value.trim();
+const password=document.getElementById("password").value.trim();
+const course=document.getElementById("course").value;
+const year=document.getElementById("year").value;
+
+// 🔴 validation
+if(!name || !password || !course || !year){
+alert("Please fill all fields");
+return;
+}
+
+// 🔹 API CALL
+fetch("http://13.60.14.122:5000/login",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({name,password})
+})
+.then(res=>{
+if(res.ok){
+return res.json();
+}else{
+throw new Error("Invalid login");
+}
+})
+.then(data=>{
+
+// ✅ store session
+localStorage.setItem("name",name);
+localStorage.setItem("course",course);
+localStorage.setItem("year",year);
+
+// ✅ go to exam
+window.location.href="exam.html";
+
+})
+.catch(err=>{
+alert("Invalid Username or Password");
+});
+
+}
+
+</script>
+
+</body>
+</html>
